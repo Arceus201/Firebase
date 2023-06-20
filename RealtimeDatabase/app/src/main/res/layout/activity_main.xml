@@ -8,13 +8,28 @@
     android:padding="16dp"
     tools:context=".MainActivity">
 
+<!--    <EditText-->
+<!--        android:id="@+id/ed_data"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:textSize="16dp"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:hint="Data"/>-->
+
+        <EditText
+            android:id="@+id/ed_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:layout_marginTop="20dp"
+            android:hint="id"/>
     <EditText
-        android:id="@+id/ed_data"
+        android:id="@+id/ed_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="16dp"
         android:layout_marginTop="20dp"
-        android:hint="Data"/>
+        android:hint="name"/>
     <Button
         android:id="@+id/bt_pushdata"
         android:text="Push Data"
@@ -22,33 +37,39 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"/>
 
-    <Button
-        android:id="@+id/bt_getdata"
-        android:text="Get Data"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"/>
+<!--    <Button-->
+<!--        android:id="@+id/bt_getdata"-->
+<!--        android:text="Get Data"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="20dp"/>-->
 
-    <TextView
-        android:id="@+id/tv_getdata"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="16dp"
-        android:layout_marginTop="20dp" />
+<!--    <TextView-->
+<!--        android:id="@+id/tv_getdata"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:textSize="16dp"-->
+<!--        android:layout_marginTop="20dp" />-->
 
-    <Button
-        android:id="@+id/bt_deletedata"
-        android:text="Delete Data"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"/>
+<!--    <Button-->
+<!--        android:id="@+id/bt_deletedata"-->
+<!--        android:text="Delete Data"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="20dp"/>-->
 
-    <Button
-        android:id="@+id/bt_updatedata"
-        android:text="Update Data"
+<!--    <Button-->
+<!--        android:id="@+id/bt_updatedata"-->
+<!--        android:text="Update Data"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="20dp"/>-->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="20dp"
+        android:id="@+id/recy"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"/>
+        android:layout_height="wrap_content"/>
 
 
 
