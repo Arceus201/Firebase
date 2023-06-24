@@ -10,26 +10,34 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.provider.Contacts;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 public class MainActivity extends AppCompatActivity {
     //    private EditText ed;
@@ -65,10 +73,20 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         mList = new ArrayList<>();
-        adapter = new UserAAdapter(mList);
+        adapter = new UserAAdapter(mList, new UserAAdapter.Inclick() {
+            @Override
+            public void onClickUpdateItem(User1 user) {
+                OpenDialogUpdateItem(user);
+            }
+
+            @Override
+            public void onClickDeleteItem(User1 user) {
+                onClickDeleteDataItem(user);
+            }
+        });
 
         recyclerView.setAdapter(adapter);
-        getListUser();
+        getListUser("4");
 
         bt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,19 +134,174 @@ public class MainActivity extends AppCompatActivity {
 //        });
     }
 
-    private void getListUser(){
+    private void onClickDeleteDataItem(User1 user) {
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.app_name))
+                .setMessage("Ban co chac chan muon xoa")
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        DatabaseReference myRef = database.getReference("list_user");
+
+                        myRef.child(String.valueOf(user.getId())).removeValue(new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                Toast.makeText(getApplicationContext(), "Delete data succes", Toast.LENGTH_LONG).show();
+                            }
+                        });
+
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void OpenDialogUpdateItem(User1 user) {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.layot_custom);
+        Window window = dialog.getWindow();
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCancelable(false);
+
+        EditText ed_update = dialog.findViewById(R.id.ed_item);
+        Button btCancel = dialog.findViewById(R.id.bt_item_cancel);
+        Button btUpdate = dialog.findViewById(R.id.bt_update_item);
+
+
+        ed_update.setText(user.getName());
+
+        btCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        btUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("list_user");
+
+                user.setName(ed_name.getText().toString().trim());
+
+                myRef.child(String.valueOf(user.getId())).updateChildren(user.toMap());
+            }
+        });
+        dialog.show();
+    }
+
+    private void getListUser(String key){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("list_user");
 
-        myRef.addValueEventListener(new ValueEventListener() {
+
+
+
+//        C1
+//        myRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                if(mList != null) mList.clear();
+//
+//                for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+//                    User1 user1 = dataSnapshot.getValue(User1.class);
+//                    mList.add(user1);
+//                }
+//
+//                adapter.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+
+        //Sort theo 1 truong tang dan
+        Query query = myRef.orderByChild("rate");
+
+        //Sort theo key
+        Query query1 = myRef.orderByKey();
+
+        //sort theo value trong 1 list String
+        Query query3 = myRef.orderByValue();
+
+        //filter
+
+        //lay 2 thang dau cua ds
+        Query query4 = myRef.limitToFirst(2);
+        //lay 2 thang cuoi cua ds
+        Query query5 = myRef.limitToLast(2);
+
+
+        //tra ve ds >= dieu kien nao do
+        Query query6 = myRef.orderByChild("rate").startAt(4);
+
+        //tra ve ds > dieu kien nao do
+        Query query7 = myRef.orderByChild("rate").startAfter(4);
+
+        //tra ve ds <= dieu kien nao do
+        Query query8 = myRef.orderByChild("rate").endAt(4);
+
+        //tra ve ds < dieu kien nao do
+        Query query9 = myRef.orderByChild("rate").endBefore(4);
+
+        //tra ve ds = dieu kien nao do
+        Query query10 = myRef.orderByChild("rate").equalTo(4);
+
+
+
+
+        //get
+        myRef.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
-                    User1 user1 = dataSnapshot.getValue(User1.class);
-                    mList.add(user1);
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                User1 user = snapshot.getValue(User1.class);
+                if(user!=null){
+                    if(user.getName().contains(key)){
+                        mList.add(user);
+                    }
+                    //Sort theo 1 truong giam dan
+//                    mList.add(0,user);
+
+//                    mList.add(user);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                User1 user = snapshot.getValue(User1.class);
+                if(user ==  null || mList == null || mList.isEmpty()) return;
+                for(int i=0;i<mList.size();i++){
+                    if(user.getId() == mList.get(i).getId()){
+                        mList.set(i,user);
+                        break;
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                User1 user = snapshot.getValue(User1.class);
+                if(user ==  null || mList == null || mList.isEmpty()) return;
+                for(int i=0;i<mList.size();i++){
+                    if(user.getId() == mList.get(i).getId()){
+                        mList.remove(mList.get(i));
+                        break;
+                    }
                 }
 
-                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
             }
 
             @Override
