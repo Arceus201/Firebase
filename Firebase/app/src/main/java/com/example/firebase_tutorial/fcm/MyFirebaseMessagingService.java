@@ -32,6 +32,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //        }
 //        String strTitle = notification.getTitle();
 //        String strMessage = notification.getBody();
+//
+//
 
         //data message
         Map<String,String> stringMap = message.getData();
