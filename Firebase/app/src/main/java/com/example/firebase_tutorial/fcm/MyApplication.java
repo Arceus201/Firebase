@@ -23,5 +23,7 @@ public class MyApplication extends Application {
             manager.createNotificationChannel(channel);
         }
     }
-    /sjdoskdos
+    //sjdoskdos
+    //alsskas
 }
+
