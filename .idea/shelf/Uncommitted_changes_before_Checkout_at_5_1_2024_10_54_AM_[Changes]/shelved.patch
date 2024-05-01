@@ -1,0 +1,16 @@
+Index: Firebase/app/src/main/java/com/example/firebase_tutorial/fcm/MyApplication.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.firebase_tutorial.fcm;\r\n\r\nimport android.app.Application;\r\nimport android.app.NotificationChannel;\r\nimport android.app.NotificationManager;\r\nimport android.os.Build;\r\n\r\n//create channel_id\r\npublic class MyApplication extends Application {\r\n    public static final String CHANNEL_ID = \"push_notification_id\";\r\n\r\n    @Override\r\n    public void onCreate() {\r\n        super.onCreate();\r\n        createChannelNotification();\r\n    }\r\n\r\n    private void createChannelNotification() {\r\n        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){\r\n            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, \"PushNotification\",\r\n                    NotificationManager.IMPORTANCE_DEFAULT);\r\n            NotificationManager manager = getSystemService(NotificationManager.class);\r\n            manager.createNotificationChannel(channel);\r\n        }\r\n    }\r\n    /sjdoskdos\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Firebase/app/src/main/java/com/example/firebase_tutorial/fcm/MyApplication.java b/Firebase/app/src/main/java/com/example/firebase_tutorial/fcm/MyApplication.java
+--- a/Firebase/app/src/main/java/com/example/firebase_tutorial/fcm/MyApplication.java	(revision b2fd34afe72894729b9ec996fe63c2155cc240fe)
++++ b/Firebase/app/src/main/java/com/example/firebase_tutorial/fcm/MyApplication.java	(date 1714535444354)
+@@ -24,4 +24,5 @@
+         }
+     }
+     /sjdoskdos
++    òofkofkfkf
+ }
